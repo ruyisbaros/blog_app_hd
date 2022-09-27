@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "posts")
@@ -17,8 +18,20 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false,unique = true)
     private String title;
     private String content;
+    private Date createdDate;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private Image postImage;
+
+    @ManyToOne
+    //@JoinColumn(name = "")
+    private User user;
+
+    @ManyToOne
+    private Category category;
 
 
 }

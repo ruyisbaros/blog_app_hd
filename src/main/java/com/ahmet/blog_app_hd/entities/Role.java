@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -17,4 +18,7 @@ public class Role {
     private String roleName;
 
     private String description;
+
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<User> users;
 }

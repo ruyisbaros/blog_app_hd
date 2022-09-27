@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -18,9 +21,21 @@ public class User {
     private Long id;
     @Column(nullable = false, name = "user_name")
     private String name;
+
     @Column(nullable = false, unique = true)
     private String email;
+    @NotNull
     private String password;
     private String about;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private Image postImage;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Post> posts;
+
+    @ManyToOne
+    @JoinColumn(name = "role_name")
+    private Role role;
 
 }

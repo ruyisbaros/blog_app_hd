@@ -1,8 +1,13 @@
 package com.ahmet.blog_app_hd.services;
 
 import com.ahmet.blog_app_hd.DTO.UserCreateUpdateRequest;
+import com.ahmet.blog_app_hd.entities.Image;
+import com.ahmet.blog_app_hd.entities.Role;
 import com.ahmet.blog_app_hd.entities.User;
-import com.ahmet.blog_app_hd.exceptions.ResourceNotFoundException;
+import com.ahmet.blog_app_hd.exceptions.ResourceAlreadyExistException;
+import com.ahmet.blog_app_hd.exceptions.ResourceNotFoundExceptionLongValue;
+import com.ahmet.blog_app_hd.repositories.ImageRep;
+import com.ahmet.blog_app_hd.repositories.RoleRep;
 import com.ahmet.blog_app_hd.repositories.UserRep;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,18 +20,29 @@ import java.util.Optional;
 public class UserService {
 
     private UserRep userRep;
+    private RoleRep roleRep;
+    private ImageRep imageRep;
 
     public User create(UserCreateUpdateRequest request) {
         boolean isExist = userRep.findByEmail(request.getEmail()).isPresent();
         if (!isExist) {
             User newUser = new User();
+            if(request.getRoleName()!=null){
+                Role role=roleRep.findByRoleName(request.getRoleName());
+                newUser.setRole(role);
+            }
+
+            if(request.getImageId()!=null){
+                Optional<Image> image=imageRep.findByImageId(request.getImageId());
+                newUser.setImage(image.get());
+            }
             newUser.setName(request.getName());
             newUser.setEmail(request.getEmail());
             newUser.setAbout(request.getAbout());
             newUser.setPassword(request.getPassword());
             return userRep.save(newUser);
         } else {
-            throw new RuntimeException(String.format("User with %s email id is already exist", request.getEmail()));
+            throw new ResourceAlreadyExistException("User", "email", request.getEmail());
         }
     }
 
@@ -39,7 +55,7 @@ public class UserService {
         if (searchedUser.isPresent()) {
             return searchedUser.get();
         } else {
-            throw new ResourceNotFoundException("User", "id", id);
+            throw new ResourceNotFoundExceptionLongValue("User", "id", id);
         }
     }
 
@@ -47,13 +63,13 @@ public class UserService {
         Optional<User> user = userRep.findById(id);
         if (user.isPresent()) {
             User updatedUser = user.get();
-            if (request.getName() != null) updatedUser.setName(request.getName());
-            if (request.getEmail() != null) updatedUser.setEmail(request.getEmail());
-            if (request.getAbout() != null) updatedUser.setAbout(request.getAbout());
-            if (request.getPassword() != null) updatedUser.setPassword(request.getPassword());
+            updatedUser.setName(request.getName());
+            updatedUser.setEmail(request.getEmail());
+            updatedUser.setAbout(request.getAbout());
+            updatedUser.setPassword(request.getPassword());
             return userRep.save(updatedUser);
         } else {
-            throw new ResourceNotFoundException("User", "id", id);
+            throw new ResourceNotFoundExceptionLongValue("User", "id", id);
         }
     }
 
@@ -62,7 +78,7 @@ public class UserService {
         if (deleteUser.isPresent()) {
             userRep.delete(deleteUser.get());
         } else {
-            throw new ResourceNotFoundException("User", "id", id);
+            throw new ResourceNotFoundExceptionLongValue("User", "id", id);
         }
     }
 }

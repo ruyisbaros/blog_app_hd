@@ -29,7 +29,7 @@ public class User {
     private String about;
 
     @OneToOne(fetch = FetchType.EAGER)
-    private Image postImage;
+    private Image image;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts;

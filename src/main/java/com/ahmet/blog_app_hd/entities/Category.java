@@ -18,4 +18,5 @@ public class Category {
     private Long Id;
 
     private String title;
+    private String description;
 }

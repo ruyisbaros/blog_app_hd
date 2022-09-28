@@ -1,6 +1,6 @@
 package com.ahmet.blog_app_hd.services;
 
-import com.ahmet.blog_app_hd.DTO.UserCreateUpdateRequest;
+import com.ahmet.blog_app_hd.DTO.UserDto;
 import com.ahmet.blog_app_hd.entities.Image;
 import com.ahmet.blog_app_hd.entities.Role;
 import com.ahmet.blog_app_hd.entities.User;
@@ -23,7 +23,7 @@ public class UserService {
     private RoleRep roleRep;
     private ImageRep imageRep;
 
-    public User create(UserCreateUpdateRequest request) {
+    public User create(UserDto request) {
         boolean isExist = userRep.findByEmail(request.getEmail()).isPresent();
         if (!isExist) {
             User newUser = new User();
@@ -59,7 +59,7 @@ public class UserService {
         }
     }
 
-    public User update(Long id, UserCreateUpdateRequest request) {
+    public User update(Long id, UserDto request) {
         Optional<User> user = userRep.findById(id);
         if (user.isPresent()) {
             User updatedUser = user.get();

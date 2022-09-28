@@ -1,9 +1,9 @@
 package com.ahmet.blog_app_hd.services;
 
-import com.ahmet.blog_app_hd.DTO.CategoryCreateUpdateRequest;
+import com.ahmet.blog_app_hd.DTO.CategoryDto;
 import com.ahmet.blog_app_hd.entities.Category;
 import com.ahmet.blog_app_hd.exceptions.ResourceAlreadyExistException;
-import com.ahmet.blog_app_hd.exceptions.ResourceNotFoundException;
+import com.ahmet.blog_app_hd.exceptions.ResourceNotFoundExceptionLongValue;
 import com.ahmet.blog_app_hd.repositories.CategoryRep;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class CategoryService {
 
     private CategoryRep categoryRep;
 
-    public Category createNew(CategoryCreateUpdateRequest request) {
+    public Category createNew(CategoryDto request) {
         boolean isExist = categoryRep.findByTitle(request.getTitle()).isPresent();
         if (!isExist) {
             Category created = new Category();
@@ -30,7 +30,7 @@ public class CategoryService {
 
     }
 
-    public Category updateCat(Long id, CategoryCreateUpdateRequest request) {
+    public Category updateCat(Long id, CategoryDto request) {
         Optional<Category> target = categoryRep.findById(id);
         if (target.isPresent()) {
             Category update = target.get();
@@ -38,7 +38,7 @@ public class CategoryService {
             update.setDescription(request.getDescription());
             return categoryRep.save(update);
         } else {
-            throw new ResourceNotFoundException("Category", "id", id);
+            throw new ResourceNotFoundExceptionLongValue("Category", "id", id);
         }
     }
 
@@ -51,7 +51,7 @@ public class CategoryService {
         if (isExist) {
             return categoryRep.findById(id).get();
         } else {
-            throw new ResourceNotFoundException("Category", "id", id);
+            throw new ResourceNotFoundExceptionLongValue("Category", "id", id);
         }
     }
 
@@ -60,7 +60,7 @@ public class CategoryService {
         if (isExist) {
             categoryRep.deleteById(id);
         } else {
-            throw new ResourceNotFoundException("Category", "id", id);
+            throw new ResourceNotFoundExceptionLongValue("Category", "id", id);
         }
     }
 }

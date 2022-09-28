@@ -2,6 +2,7 @@ package com.ahmet.blog_app_hd.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,13 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class cloudinaryService {
+public class CloudinaryService {
 
-    Cloudinary cloudinary;
+     Cloudinary cloudinary;
 
     private Map<String, String> valuesMap = new HashMap<>();
 
-    public cloudinaryService() {
+    public CloudinaryService() {
         valuesMap.put("cloud_name", "ruyisbaros");
         valuesMap.put("api_key", "722783628133715");
         valuesMap.put("api_secret", "7fqmZuIkl462T1fvoiNGxVwq_Oo");

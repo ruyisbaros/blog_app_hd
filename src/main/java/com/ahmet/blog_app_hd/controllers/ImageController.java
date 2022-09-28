@@ -3,6 +3,7 @@ package com.ahmet.blog_app_hd.controllers;
 import com.ahmet.blog_app_hd.DTO.ApiResponse;
 import com.ahmet.blog_app_hd.entities.Image;
 import com.ahmet.blog_app_hd.exceptions.ResourceAlreadyExistException;
+import com.ahmet.blog_app_hd.exceptions.ResourceNotFoundExceptionStringValue;
 import com.ahmet.blog_app_hd.services.CloudinaryService;
 import com.ahmet.blog_app_hd.services.ImageService;
 import lombok.AllArgsConstructor;
@@ -40,8 +41,8 @@ public class ImageController {
             return new ResponseEntity<>(new ApiResponse("Image has been deleted", true),
                     HttpStatus.OK);
         } else {
-            //New exception class i must create (later)
-            throw new ResourceAlreadyExistException("Image", "ID", id);
+
+            throw new ResourceNotFoundExceptionStringValue("Image", "ID", id);
         }
     }
 }

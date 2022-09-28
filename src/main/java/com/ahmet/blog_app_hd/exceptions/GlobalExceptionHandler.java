@@ -14,8 +14,16 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse> resourceNotFoundException(ResourceNotFoundException e) {
+    @ExceptionHandler(ResourceNotFoundExceptionLongValue.class)
+    public ResponseEntity<ApiResponse> resourceNotFoundException(ResourceNotFoundExceptionLongValue e) {
+
+        String message = e.getMessage();
+        ApiResponse apiResponse = new ApiResponse(message, false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceNotFoundExceptionStringValue.class)
+    public ResponseEntity<ApiResponse> resourceNotFoundException(ResourceNotFoundExceptionStringValue e) {
 
         String message = e.getMessage();
         ApiResponse apiResponse = new ApiResponse(message, false);

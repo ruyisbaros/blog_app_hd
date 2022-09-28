@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class CategoryCreateUpdateRequest {
+public class CategoryDto {
 
     @NotEmpty(message = "Title value should not be null")
     private String title;

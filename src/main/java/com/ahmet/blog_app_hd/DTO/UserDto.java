@@ -1,14 +1,12 @@
 package com.ahmet.blog_app_hd.DTO;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Data
-public class UserCreateUpdateRequest {
+public class UserDto {
 
     @NotEmpty(message = "user name should not be null")
     private String name;

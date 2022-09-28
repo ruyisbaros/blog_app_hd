@@ -1,7 +1,7 @@
 package com.ahmet.blog_app_hd.controllers;
 
 import com.ahmet.blog_app_hd.DTO.ApiResponse;
-import com.ahmet.blog_app_hd.DTO.UserCreateUpdateRequest;
+import com.ahmet.blog_app_hd.DTO.UserDto;
 import com.ahmet.blog_app_hd.entities.User;
 import com.ahmet.blog_app_hd.services.UserService;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateUpdateRequest request) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserDto request) {
         User createdUser = userService.create(request);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id,@Valid @RequestBody UserCreateUpdateRequest request) {
+    public ResponseEntity<User> updateUser(@PathVariable Long id,@Valid @RequestBody UserDto request) {
         User updatedUser = userService.update(id, request);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }

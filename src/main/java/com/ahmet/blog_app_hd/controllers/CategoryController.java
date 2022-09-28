@@ -1,7 +1,7 @@
 package com.ahmet.blog_app_hd.controllers;
 
 import com.ahmet.blog_app_hd.DTO.ApiResponse;
-import com.ahmet.blog_app_hd.DTO.CategoryCreateUpdateRequest;
+import com.ahmet.blog_app_hd.DTO.CategoryDto;
 import com.ahmet.blog_app_hd.entities.Category;
 import com.ahmet.blog_app_hd.services.CategoryService;
 import lombok.AllArgsConstructor;
@@ -19,14 +19,14 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Valid @RequestBody CategoryCreateUpdateRequest request){
+    public ResponseEntity<?> create(@Valid @RequestBody CategoryDto request){
         Category created=categoryService.createNew(request);
 
         return ResponseEntity.ok(created);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,@Valid @RequestBody CategoryCreateUpdateRequest request){
+    public ResponseEntity<?> update(@PathVariable Long id,@Valid @RequestBody CategoryDto request){
         Category updated=categoryService.updateCat(id,request);
         return ResponseEntity.ok(updated);
     }

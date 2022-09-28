@@ -1,6 +1,7 @@
 package com.ahmet.blog_app_hd.controllers;
 
 import com.ahmet.blog_app_hd.DTO.ApiResponse;
+import com.ahmet.blog_app_hd.DTO.LoginDto;
 import com.ahmet.blog_app_hd.DTO.UserDto;
 import com.ahmet.blog_app_hd.entities.User;
 import com.ahmet.blog_app_hd.services.UserService;
@@ -18,14 +19,6 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
-
-    @PostMapping("/register")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDto request) {
-        User createdUser = userService.create(request);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-    }
-
-    //@PostMapping("/login")
 
     @GetMapping("/all")
     public ResponseEntity<List<User>> getUsers() {

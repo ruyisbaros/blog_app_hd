@@ -1,9 +1,11 @@
 package com.ahmet.blog_app_hd.DTO;
 
+import com.ahmet.blog_app_hd.entities.Role;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Data
 public class UserDto {
@@ -18,6 +20,6 @@ public class UserDto {
     private String password;
     @NotEmpty(message = "user about should not be null")
     private String about;
-    private String roleName;
+    private List<Role> roles;
     private String imageId;
 }

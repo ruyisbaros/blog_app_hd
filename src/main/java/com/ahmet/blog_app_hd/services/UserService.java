@@ -10,8 +10,10 @@ import com.ahmet.blog_app_hd.repositories.ImageRep;
 import com.ahmet.blog_app_hd.repositories.RoleRep;
 import com.ahmet.blog_app_hd.repositories.UserRep;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,23 +25,28 @@ public class UserService {
     private RoleRep roleRep;
     private ImageRep imageRep;
 
+    private PasswordEncoder passwordEncoder;
+
     public User create(UserDto request) {
         boolean isExist = userRep.findByEmail(request.getEmail()).isPresent();
         if (!isExist) {
             User newUser = new User();
-            if(request.getRoleName()!=null){
-                Role role=roleRep.findByRoleName(request.getRoleName());
-                newUser.setRole(role);
+            if (request.getRoles() != null) {
+                List<Role> roles = new ArrayList<>();
+                for (Role role : request.getRoles()) {
+                    roles.add(new Role(role.getRoleName()));
+                }
+                newUser.setRoles(roles);
             }
 
-            if(request.getImageId()!=null){
-                Optional<Image> image=imageRep.findByImageId(request.getImageId());
+            if (request.getImageId() != null) {
+                Optional<Image> image = imageRep.findByImageId(request.getImageId());
                 newUser.setImage(image.get());
             }
             newUser.setName(request.getName());
             newUser.setEmail(request.getEmail());
             newUser.setAbout(request.getAbout());
-            newUser.setPassword(request.getPassword());
+            newUser.setPassword(passwordEncoder.encode(request.getPassword()));
             return userRep.save(newUser);
         } else {
             throw new ResourceAlreadyExistException("User", "email", request.getEmail());
@@ -63,10 +70,22 @@ public class UserService {
         Optional<User> user = userRep.findById(id);
         if (user.isPresent()) {
             User updatedUser = user.get();
+
+            List<Role> roles = new ArrayList<>();
+            for (Role role : request.getRoles()) {
+                roles.add(new Role(role.getRoleName()));
+            }
+            updatedUser.setRoles(roles);
+
+            if (request.getImageId() != null) {
+                Optional<Image> image = imageRep.findByImageId(request.getImageId());
+                updatedUser.setImage(image.get());
+            }
+
             updatedUser.setName(request.getName());
             updatedUser.setEmail(request.getEmail());
             updatedUser.setAbout(request.getAbout());
-            updatedUser.setPassword(request.getPassword());
+            updatedUser.setPassword(passwordEncoder.encode(request.getPassword()));
             return userRep.save(updatedUser);
         } else {
             throw new ResourceNotFoundExceptionLongValue("User", "id", id);

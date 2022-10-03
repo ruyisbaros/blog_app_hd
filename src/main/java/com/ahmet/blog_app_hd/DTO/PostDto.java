@@ -13,5 +13,5 @@ public class PostDto {
 
     private String imageId;
     private Long userId;
-    private Long categoryId;
+    private String categoryTitle;
 }

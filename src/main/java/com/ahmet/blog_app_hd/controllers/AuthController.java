@@ -5,6 +5,7 @@ import com.ahmet.blog_app_hd.DTO.LoginResponse;
 import com.ahmet.blog_app_hd.DTO.UserDto;
 import com.ahmet.blog_app_hd.JWT.JwtCreate;
 import com.ahmet.blog_app_hd.entities.User;
+import com.ahmet.blog_app_hd.exceptions.AccessDeniedException;
 import com.ahmet.blog_app_hd.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,9 +31,11 @@ public class AuthController {
     private JwtCreate jwtCreate;
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDto request) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserDto request) {
         User createdUser = userService.create(request);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        String jwtToken = jwtCreate.createToken(createdUser);
+        Object[] regResponse = {jwtToken, createdUser};
+        return new ResponseEntity<>(regResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -44,12 +47,11 @@ public class AuthController {
 
             User user = (User) authentication.getPrincipal();
             String jwtToken = jwtCreate.createToken(user);
-            LoginResponse loginResponse = new LoginResponse(user.getEmail(), jwtToken, user.getImage(), user.getRoles());
-            return ResponseEntity.ok(loginResponse);
+            Object[] regResponse = {jwtToken, user};
+            return new ResponseEntity<>(regResponse, HttpStatus.CREATED);
 
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+            throw new AccessDeniedException("Invalid username or password");
         }
     }
 

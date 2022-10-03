@@ -10,4 +10,6 @@ public interface CategoryRep extends JpaRepository<Category, Long> {
 
     @Query("select c from Category c where c.title = ?1")
     Optional<Category> findByTitle(String title);
+
+
 }

@@ -44,9 +44,9 @@ public class PostService {
                         .orElseThrow(() -> new ResourceNotFoundExceptionLongValue("User", "id", request.getUserId()));
                 created.setUser(user);
             }
-            if (request.getCategoryId() != null) {
-                Category category = categoryRep.findById(request.getCategoryId())
-                        .orElseThrow(() -> new ResourceNotFoundExceptionLongValue("Category", "id", request.getCategoryId()));
+            if (request.getCategoryTitle() != null) {
+                Category category = categoryRep.findByTitle(request.getCategoryTitle())
+                        .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Category", "id", request.getCategoryTitle()));
                 created.setCategory(category);
             }
             if (request.getImageId() != null) {
@@ -59,11 +59,11 @@ public class PostService {
             created.setCreatedDate(new Date());
             return postRep.save(created);
         } else {
-            throw new ResourceAlreadyExistException("Category", "title", request.getTitle());
+            throw new ResourceAlreadyExistException("Post", "title", request.getTitle());
         }
     }
 
-    public Post updateCat(Long id, PostDto request) {
+    public Post updatePost(Long id, PostDto request) {
         Optional<Post> target = postRep.findById(id);
         if (target.isPresent()) {
             Post update = target.get();
@@ -72,9 +72,9 @@ public class PostService {
                         .orElseThrow(() -> new ResourceNotFoundExceptionLongValue("User", "id", request.getUserId()));
                 update.setUser(user);
             }
-            if (request.getCategoryId() != null) {
-                Category category = categoryRep.findById(request.getCategoryId())
-                        .orElseThrow(() -> new ResourceNotFoundExceptionLongValue("Category", "id", request.getCategoryId()));
+            if (request.getCategoryTitle() != null) {
+                Category category = categoryRep.findByTitle(request.getCategoryTitle())
+                        .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Category", "id", request.getCategoryTitle()));
                 update.setCategory(category);
             }
             if (request.getImageId() != null) {
@@ -85,6 +85,7 @@ public class PostService {
 
             update.setTitle(request.getTitle());
             update.setContent(request.getContent());
+            update.setCreatedDate(new Date());
             return postRep.save(update);
         } else {
             throw new ResourceNotFoundExceptionLongValue("Post", "id", id);
@@ -113,9 +114,9 @@ public class PostService {
                 .orElseThrow(() -> new ResourceNotFoundExceptionLongValue("Post", "id", id));
     }
 
-    public List<Post> getPostsByCategory(Long id) {
-        Category category = categoryRep.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExceptionLongValue("Category", "categoryId", id));
+    public List<Post> getPostsByCategory(String categoryTitle) {
+        Category category = categoryRep.findByTitle(categoryTitle)
+                .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Category", "categoryTitle", categoryTitle));
         return postRep.findByCategory(category);
     }
 

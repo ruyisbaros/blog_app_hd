@@ -29,9 +29,10 @@ public class PostController {
             @RequestParam(value = "pageNo", defaultValue = PAGE_NUMBER, required = REQUIREMENT) int pageNo,
             @RequestParam(value = "sortField", defaultValue = SORT_FIELD,required = REQUIREMENT) String sortField,
             @RequestParam(value = "sortDir", defaultValue = SORT_DIR, required = REQUIREMENT) String sortDir,
-            @RequestParam(value = "keyword", defaultValue = KEY_WORD, required = REQUIREMENT) String keyword)
+            @RequestParam(value = "keyword", defaultValue = KEY_WORD, required = REQUIREMENT) String keyword,
+            @RequestParam(value = "category", defaultValue = CATEGORY, required = REQUIREMENT) String category)
     {
-        return postService.postsPaginatedSorted(pageSize, pageNo, sortField,sortDir,keyword);
+        return postService.postsPaginatedSorted(pageSize, pageNo, sortField,sortDir,keyword,category);
     }
 
     @PostMapping("/create")
@@ -42,7 +43,7 @@ public class PostController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody PostDto request) {
-        Post updated = postService.updateCat(id, request);
+        Post updated = postService.updatePost(id, request);
         return ResponseEntity.ok(updated);
     }
 
@@ -65,9 +66,9 @@ public class PostController {
         return ResponseEntity.ok(found);
     }
 
-    @GetMapping("/category/{categoryId}")
-    public List<Post> getPostsByCategory(@PathVariable Long categoryId) {
-        return postService.getPostsByCategory(categoryId);
+    @GetMapping("/category/{categoryTitle}")
+    public List<Post> getPostsByCategory(@PathVariable String categoryTitle) {
+        return postService.getPostsByCategory(categoryTitle);
     }
 
     @GetMapping("/user/{userId}")

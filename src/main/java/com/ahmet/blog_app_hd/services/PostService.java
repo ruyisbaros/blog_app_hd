@@ -5,7 +5,6 @@ import com.ahmet.blog_app_hd.entities.Category;
 import com.ahmet.blog_app_hd.entities.Image;
 import com.ahmet.blog_app_hd.entities.Post;
 import com.ahmet.blog_app_hd.entities.User;
-import com.ahmet.blog_app_hd.exceptions.ResourceAlreadyExistException;
 import com.ahmet.blog_app_hd.exceptions.ResourceNotFoundExceptionLongValue;
 import com.ahmet.blog_app_hd.exceptions.ResourceNotFoundExceptionStringValue;
 import com.ahmet.blog_app_hd.repositories.CategoryRep;
@@ -35,32 +34,28 @@ public class PostService {
     private CategoryRep categoryRep;
 
     public Post create(PostDto request) {
-        boolean isExist = postRep.findByTitle(request.getTitle()).isPresent();
 
-        if (!isExist) {
-            Post created = new Post();
-            if (request.getUserId() != null) {
-                User user = userRep.findById(request.getUserId())
-                        .orElseThrow(() -> new ResourceNotFoundExceptionLongValue("User", "id", request.getUserId()));
-                created.setUser(user);
-            }
-            if (request.getCategoryTitle() != null) {
-                Category category = categoryRep.findByTitle(request.getCategoryTitle())
-                        .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Category", "id", request.getCategoryTitle()));
-                created.setCategory(category);
-            }
-            if (request.getImageId() != null) {
-                Image image = imageRep.findByImageId(request.getImageId())
-                        .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Image", "Id", request.getImageId()));
-                created.setPostImage(image);
-            }
-            created.setTitle(request.getTitle());
-            created.setContent(request.getContent());
-            created.setCreatedDate(new Date());
-            return postRep.save(created);
-        } else {
-            throw new ResourceAlreadyExistException("Post", "title", request.getTitle());
+        Post created = new Post();
+        if (request.getUserId() != null) {
+            User user = userRep.findById(request.getUserId())
+                    .orElseThrow(() -> new ResourceNotFoundExceptionLongValue("User", "id", request.getUserId()));
+            created.setUser(user);
         }
+        if (request.getCategoryTitle() != null) {
+            Category category = categoryRep.findByTitle(request.getCategoryTitle())
+                    .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Category", "id", request.getCategoryTitle()));
+            created.setCategory(category);
+        }
+        if (request.getImageId() != null) {
+            Image image = imageRep.findByImageId(request.getImageId())
+                    .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Image", "Id", request.getImageId()));
+            created.setPostImage(image);
+        }
+        created.setTitle(request.getTitle());
+        created.setContent(request.getContent());
+        created.setCreatedDate(new Date());
+        return postRep.save(created);
+
     }
 
     public Post updatePost(Long id, PostDto request) {
@@ -115,9 +110,7 @@ public class PostService {
     }
 
     public List<Post> getPostsByCategory(String categoryTitle) {
-        Category category = categoryRep.findByTitle(categoryTitle)
-                .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Category", "categoryTitle", categoryTitle));
-        return postRep.findByCategory(category);
+        return null;
     }
 
     public List<Post> getPostsByUser(Long id) {
@@ -134,10 +127,19 @@ public class PostService {
 
 
     public Page<Post> postsPaginatedSorted(int pageSize, int pageNo, String sortField,
-                                           String sortDir, String keyword) {
+                                           String sortDir, String keyword, String category) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortField).ascending() : Sort.by(sortField).descending();
-        Pageable pageable = PageRequest.of(pageNo-1, pageSize, sort);
-        return postRep.findByKeyWord(keyword, pageable);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        if (!category.isBlank()) {
+            Category categorySearched = categoryRep.findByTitle(category)
+                    .orElseThrow(() -> new ResourceNotFoundExceptionStringValue("Category", "categoryTitle", category));
+
+            return postRep.findByCategory(categorySearched, pageable);
+        } else {
+
+            return postRep.findByKeyWord(keyword, pageable);
+        }
     }
 }

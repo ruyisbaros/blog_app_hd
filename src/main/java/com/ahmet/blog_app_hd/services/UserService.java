@@ -1,6 +1,7 @@
 package com.ahmet.blog_app_hd.services;
 
 import com.ahmet.blog_app_hd.DTO.UserDto;
+import com.ahmet.blog_app_hd.JWT.JwtCreate;
 import com.ahmet.blog_app_hd.entities.Image;
 import com.ahmet.blog_app_hd.entities.Role;
 import com.ahmet.blog_app_hd.entities.User;
@@ -26,6 +27,8 @@ public class UserService {
     private ImageRep imageRep;
 
     private PasswordEncoder passwordEncoder;
+
+//    pw4gq42vstslcyqzi81o  default image.png
 
     public User create(UserDto request) {
         boolean isExist = userRep.findByEmail(request.getEmail()).isPresent();

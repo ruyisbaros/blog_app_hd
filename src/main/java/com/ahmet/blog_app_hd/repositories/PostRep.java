@@ -17,7 +17,7 @@ public interface PostRep extends JpaRepository<Post, Long> {
     Optional<Post> findByTitle(String title);
 
     List<Post> findByUser(User user);
-    List<Post> findByCategory(Category category);
+    Page<Post> findByCategory(Category category,Pageable pageable);
 
     @Query("select p from Post p where p.title like %?1% or p.content like %?1%")
     Page<Post> findByKeyWord(String keyword, Pageable pageable);

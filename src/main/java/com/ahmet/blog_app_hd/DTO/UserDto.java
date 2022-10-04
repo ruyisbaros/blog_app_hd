@@ -12,14 +12,19 @@ public class UserDto {
 
     @NotEmpty(message = "user name should not be null")
     private String name;
+
     @Email(message = "Email address is not valid")
     @NotEmpty(message = "user email should not be null")
-    //@UniqueElements(message = "User with this email already exist")
     private String email;
+
     @NotEmpty(message = "user password should not be null")
     private String password;
-    @NotEmpty(message = "user about should not be null")
+
+
     private String about;
+
+    @NotEmpty(message = "Roles should not be null")
     private List<Role> roles;
+
     private String imageId;
 }

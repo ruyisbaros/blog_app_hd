@@ -17,9 +17,14 @@ import java.util.List;
 public class Role {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String roleName;
 
     private String description;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users=new ArrayList<>();
 
     public Role(String roleName) {
         this.roleName = roleName;
